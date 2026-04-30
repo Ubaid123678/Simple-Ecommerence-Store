@@ -1,0 +1,51 @@
+# NovaMart — Project Task Tracker
+
+## Phase 1: Setup & Foundation (COMPLETE ✅)
+- [x] Create task tracker
+- [x] Write package.json & install dependencies
+- [x] Write .env (local MongoDB config)
+- [x] Write config/db.js (Mongoose connection)
+- [x] Mongoose Models (User, Admin, Product, Cart, Order, Wishlist, Review, Coupon)
+- [x] Seed data script & run import
+
+## Phase 2: API & Socket Architecture (COMPLETE ✅)
+- [x] Write server.js (Express + HTTP + Socket.IO)
+- [x] Socket event handlers (newOrder, orderStatusUpdate)
+- [x] Middleware (Auth, Admin, Uploads)
+- [x] REST API Controllers (Auth, Product, Cart, Order, Wishlist, Review, Coupon, Admin)
+- [x] REST API Routes (Uncommented in server.js)
+- [x] Create `uploads/` folder for images
+
+## Phase 3: Store Frontend (COMPLETE ✅)
+- [x] Create frontend directory structure (css/, js/)
+- [x] Global CSS design system (style.css — Glassmorphism Dark Mode, 900+ lines)
+- [x] Animations CSS (fadeInUp, stagger, pulse, spin, heartBeat, float)
+- [x] API wrapper (api.js — AuthAPI, ProductAPI, CartAPI, OrderAPI, WishlistAPI, CouponAPI)
+- [x] UI utilities (ui.js — toasts, navbar, footer, stars, loading)
+- [x] Auth logic (auth.js — login/register with JWT storage)
+- [x] Socket.IO client (socket.js — orderStatusUpdate listener)
+- [x] Product listing (products.js — grid, filters, sort, pagination, quick add-to-cart)
+- [x] Product detail (product-detail.js — gallery, qty, reviews)
+- [x] Cart management (cart.js — CRUD, coupon, summary)
+- [x] Checkout (checkout.js — shipping form, payment, order creation)
+- [x] Wishlist (wishlist.js — add/remove)
+- [x] HTML Pages: index, product, cart, checkout, order-success, auth, profile, wishlist
+- [x] Server updated to serve frontend as static files
+- [x] Browser verification: Premium dark UI loads correctly, products render from API
+
+## Phase 4: Separate Admin Panel 🚀
+- [ ] Admin folder setup
+- [ ] Admin Professional Dark Theme
+- [ ] Admin login page
+- [ ] Dashboard: Stats & Charts (Chart.js)
+- [ ] Product Management: CRUD + Image Upload
+- [ ] Order Management: Status updating logic
+- [ ] User management page
+- [ ] Coupon management page
+- [ ] Socket.IO Integration: New order alerts
+
+## Phase 5: Final Polish
+- [ ] Responsive testing
+- [ ] Performance audit
+- [ ] 404 & Error boundary pages
+- [ ] README.md setup instructions

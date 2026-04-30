@@ -1,0 +1,242 @@
+# 🛒 NovaMart — E-Commerce Store | Internship Project Plan
+
+## Store Name
+
+> **NovaMart**
+
+---
+
+## Overview
+
+A fully functional, professionally designed e-commerce web application built for internship **Project 1**.
+- **Store** → Customer-facing website (browse, cart, checkout, profile)
+- **Admin Panel** → Completely separate application (own login, own routes, isolated from store)
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────┐    ┌──────────────────────────────┐
+│   STORE (Customer Frontend) │    │  ADMIN PANEL (Separate App)  │
+│   frontend/                 │    │  admin-panel/                │
+│   localhost:5500            │    │  localhost:5501 (or /admin)  │
+└────────────┬────────────────┘    └────────────┬─────────────────┘
+             │ REST API + Socket.IO              │ REST API + Socket.IO
+             ▼                                  ▼
+┌────────────────────────────────────────────────────────────────┐
+│                  Express.js Server  (Node.js)                  │
+│                  + Socket.IO (Real-time events)                │
+│                                                                │
+│  /api/auth/*      → Customer auth                              │
+│  /api/products/*  → Public product routes                      │
+│  /api/cart/*      → Customer cart                              │
+│  /api/orders/*    → Customer orders                            │
+│  /api/admin/*     → Admin-only routes (separate JWT required)  │
+└───────────────────────────┬────────────────────────────────────┘
+                            │ Mongoose ODM
+                            ▼
+                    ┌───────────────┐
+                    │   MongoDB     │
+                    │  (local       │
+                    │   Compass)    │
+                    └───────────────┘
+```
+
+- **Frontend**: HTML5 + Vanilla CSS (glassmorphism, dark mode) + Vanilla JS + Socket.IO Client
+- **Backend**: Node.js + Express.js (REST API) + Socket.IO (WebSockets)
+- **Database**: **MongoDB Local (Compass)** with **Mongoose ODM**
+- **Customer Auth**: JWT (`JWT_SECRET`)
+- **Admin Auth**: Separate JWT (`ADMIN_JWT_SECRET`) — completely independent
+
+---
+
+## ✅ Required Features
+
+| Feature | Implementation |
+|---|---|
+| Product Listings | Grid view with filters, search, sort, pagination |
+| Product Details Page | Gallery, description, stock badge, reviews |
+| Shopping Cart | Real-time cart, quantity control, subtotal |
+| Order Processing | Checkout → saved to MongoDB → confirmation |
+
+---
+
+## 🚀 Bonus Features (All Included)
+
+| Feature | Notes |
+|---|---|
+| 🔐 User Auth (Register/Login) | JWT, bcrypt password hashing |
+| 🛠️ Admin Panel (Separate App) | Completely isolated login + dashboard |
+| ⚡ **Socket.IO Real-time** | Live order status updates & admin notifications |
+| 🔍 Search & Filter | Category, price range, keyword, sort |
+| ❤️ Wishlist | Add/remove, persisted per user |
+| ⭐ Product Reviews & Ratings | Star rating + comment |
+| 📦 Order History | User profile → past orders |
+| 🏷️ Coupon/Discount Codes | Code validation + % discount |
+| 📱 Responsive Design | Mobile-first layouts |
+| 🔔 Toast Notifications | Micro-feedback on all actions |
+| 🖼️ Image Upload | Multer — admin uploads product images |
+
+---
+
+## ⚡ Socket.IO Real-Time Integration
+
+We will use WebSockets to provide a premium, dynamic feel:
+
+1.  **Customer Store**:
+    -   Customers listen for `orderStatusUpdate` events.
+    -   When an admin changes an order's status (e.g., "Processing" -> "Shipped"), the customer sees the update *instantly* via a Toast notification without refreshing the page.
+
+2.  **Admin Panel**:
+    -   Admins listen for `newOrder` events.
+    -   When a customer completes checkout, the admin panel gets an instant notification and updates the dashboard order count/list immediately.
+
+---
+
+## 📁 Folder Structure
+
+```
+Simple Ecommerence Store/
+│
+├── backend/                          ← Express API + Socket.IO Server
+│   ├── server.js                     # Entry point (HTTP + Socket server)
+│   ├── package.json
+│   ├── .env                          # MONGO_URI, JWT_SECRET, ADMIN_JWT_SECRET, PORT
+│   │
+│   ├── config/
+│   │   └── db.js                     # Local MongoDB connection
+│   │
+│   ├── models/                       # Mongoose Schemas
+│   │   └── ... (User, Product, Order, Admin, etc.)
+│   │
+│   ├── middleware/
+│   │   ├── authMiddleware.js         # Verify customer JWT
+│   │   └── adminMiddleware.js        # Verify admin JWT
+│   │
+│   ├── routes/
+│   │   └── ... (Public API, Customer API, Admin API)
+│   │
+│   ├── controllers/                  # Business logic
+│   │   └── ...
+│   │
+│   ├── sockets/                      # WebSocket Event Handlers
+│   │   └── socketHandler.js
+│   │
+│   ├── seeds/
+│   │   └── seed.js                   # Seed local MongoDB
+│   │
+│   └── uploads/                      # Product images (multer)
+│
+├── frontend/                         ← Customer Store (NovaMart)
+│   ├── ... (HTML files)
+│   ├── css/
+│   │   └── style.css                 # Premium custom design system
+│   └── js/
+│       ├── socket.js                 # Customer socket listeners
+│       └── ... (API, UI logic)
+│
+└── admin-panel/                      ← Admin App
+    ├── ... (HTML files)
+    ├── css/
+    │   └── admin-style.css
+    └── js/
+        ├── admin-socket.js           # Admin socket listeners
+        └── ... (Admin logic)
+```
+
+---
+
+## 🎨 Professional UI Design & Color Scheme
+
+To meet the "professional UI" requirement, NovaMart will feature a highly polished, modern, premium aesthetic. No generic Bootstrap looks.
+
+### The "Nova" Theme (Dark Mode Default)
+
+-   **Style**: Premium Dark Mode with Neon/Holo Accents, heavy use of Glassmorphism (frosted glass effects).
+-   **Typography**:
+    -   Headings: `Outfit` (Geometric, modern, bold)
+    -   Body text: `Inter` (Highly readable, clean)
+-   **Micro-interactions**: Hover lifts, smooth color transitions, interactive buttons, sleek modal animations.
+
+### Finalized Color Palette
+
+| Usage | Color Hex | Description |
+|---|---|---|
+| **Background (Deep Space)** | `#0B0E14` | Very dark, slightly blue-tinted gray. Better than pure black. |
+| **Surface (Frosted Glass)** | `rgba(255, 255, 255, 0.03)` | For cards and panels, accompanied by `backdrop-filter: blur(10px)`. |
+| **Primary Accent (Nova Purple)** | `#8A2BE2` | Vibrant Blue-Violet. Used for primary buttons and active states. |
+| **Secondary Accent (Cyan/Teal)** | `#00E5FF` | Electric Cyan. Used for hover states, badges, and small highlights. |
+| **Text Primary** | `#F8FAFC` | Crisp white for readability. |
+| **Text Secondary** | `#94A3B8` | Muted silver-gray for secondary info. |
+| **Status: Success** | `#10B981` | Emerald Green (Order Confirmed, In Stock). |
+| **Status: Error/Cancel** | `#EF4444` | Crimson Red (Errors, Cancelled Orders). |
+| **Status: Warning/Pending**| `#F59E0B` | Amber (Pending actions, low stock). |
+
+---
+
+## 📦 Dependencies
+
+### Backend
+```json
+{
+  "dependencies": {
+    "express": "^4.18",
+    "mongoose": "^8.3",
+    "bcryptjs": "^2.4",
+    "jsonwebtoken": "^9.0",
+    "multer": "^1.4",
+    "socket.io": "^4.7",
+    "cors": "^2.8",
+    "dotenv": "^16.0",
+    "morgan": "^1.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1"
+  }
+}
+```
+
+### Frontend & Admin Panel
+- Socket.IO Client CDN
+- Pure HTML/CSS/JS
+- Google Fonts CDN (`Inter`, `Outfit`)
+- Lucide Icons CDN (Clean, modern SVG icons)
+- Chart.js CDN (admin dashboard)
+
+---
+
+## 🗺️ Build Phases
+
+### Phase 1 — Backend & DB Setup (Local Mongo)
+- Init project, install packages (including `socket.io`).
+- Setup Mongoose connection to local `mongodb://localhost:27017/novamart`.
+- Define Schemas & run Seed script.
+- Build JWT Auth routes & middleware.
+
+### Phase 2 — API & Socket Architecture
+- Build all REST API controllers (Products, Cart, Orders, Admin).
+- Integrate `Socket.io` with Express server.
+- Setup event emitters in controllers (e.g., `io.emit('newOrder')` when order placed).
+
+### Phase 3 — Store Frontend (Premium UI)
+- Implement the "Nova" design system CSS.
+- Build pages: Home, Product Details, Cart, Checkout, Auth, Profile.
+- Connect to API and add Socket.IO client listeners (`orderStatusUpdate`).
+
+### Phase 4 — Separate Admin Panel
+- Build Admin dark theme CSS.
+- Admin Auth logic & Dashboard stats.
+- Connect Admin Socket.IO client (`newOrder` notifications).
+- Order Management UI (change status -> triggers socket event to customer).
+
+### Phase 5 — Final Polish
+- Ensure all hover effects, toasts, and transitions match the premium requirement.
+- Verify end-to-end Socket real-time flow.
+- Code cleanup and brief instructions.
+
+---
+
+## ❓ Final Check
+
+Please confirm this plan. Once approved, I will immediately begin executing Phase 1 (Setting up the Node project, Express server, Mongoose local connection, and basic folder structure).

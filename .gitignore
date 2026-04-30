@@ -1,0 +1,9 @@
+**/node_modules/
+.env
+backend/.env
+backend/package-lock.json
+backend/uploads/*
+!backend/uploads/.gitkeep
+.DS_Store
+npm-debug.log*
+yarn-error.log*

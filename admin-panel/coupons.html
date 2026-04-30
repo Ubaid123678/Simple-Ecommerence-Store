@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupons — NovaMart Admin</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar-root"></div>
+        <div class="main-content">
+            <div id="topbar-root"></div>
+            <div class="page-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Coupon Codes</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('couponModal')">+ Add Coupon</button>
+                    </div>
+                    <div class="panel-body">
+                        <table class="data-table">
+                            <thead><tr><th>Code</th><th>Discount</th><th>Uses Left</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="couponsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coupon Modal -->
+    <div class="modal-overlay" id="couponModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add Coupon</h2>
+                <button class="modal-close" onclick="closeModal('couponModal')">✕</button>
+            </div>
+            <form id="couponForm">
+                <div class="form-group">
+                    <label class="form-label">Coupon Code</label>
+                    <input class="form-input" type="text" id="cCode" placeholder="e.g. SUMMER25" required style="text-transform:uppercase" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Discount (%)</label>
+                        <input class="form-input" type="number" id="cDiscount" min="1" max="100" placeholder="10" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Total Uses</label>
+                        <input class="form-input" type="number" id="cUses" min="1" placeholder="100" required />
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('couponModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Coupon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-api.js"></script>
+    <script src="js/admin-ui.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="js/admin-socket.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminPage('coupons', 'Coupons');
+            loadCoupons();
+            document.getElementById('couponForm').addEventListener('submit', createCoupon);
+        });
+
+        async function loadCoupons() {
+            const tbody = document.getElementById('couponsTable');
+            try {
+                const coupons = await AdminAPI.getCoupons();
+                if (!coupons || coupons.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No coupons created yet</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = coupons.map(c => {
+                    const active = c.usesRemaining > 0;
+                    return `<tr>
+                        <td style="font-weight:700;font-family:var(--font-heading);letter-spacing:1px;color:var(--accent)">${c.code}</td>
+                        <td style="font-weight:600">${c.discountPercent}%</td>
+                        <td>${c.usesRemaining}</td>
+                        <td><span class="badge-status ${active?'badge-delivered':'badge-cancelled'}">${active?'Active':'Expired'}</span></td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteCoupon('${c._id}')">Delete</button></td>
+                    </tr>`;
+                }).join('');
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        async function createCoupon(e) {
+            e.preventDefault();
+            try {
+                const body = {
+                    code: document.getElementById('cCode').value.toUpperCase(),
+                    discountPercent: Number(document.getElementById('cDiscount').value),
+                    usesRemaining: Number(document.getElementById('cUses').value)
+                };
+                await adminAPI('/admin/coupons', { method: 'POST', body: JSON.stringify(body) });
+                showToast('Coupon created!', 'success');
+                closeModal('couponModal');
+                document.getElementById('couponForm').reset();
+                loadCoupons();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        async function deleteCoupon(id) {
+            if (!confirm('Delete this coupon?')) return;
+            try {
+                await adminAPI(`/admin/coupons/${id}`, { method: 'DELETE' });
+                showToast('Coupon deleted', 'info');
+                loadCoupons();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — NovaMart</title>
+    <meta name="description" content="Sign in or create a new NovaMart account.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="page-wrapper" id="authPage">
+        <div class="auth-container animate-fade-in-up">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Welcome to <span class="text-accent">NovaMart</span></h1>
+                    <p>Sign in to your account or create a new one</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="loginTab">Sign In</button>
+                    <button class="auth-tab" id="registerTab">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" type="password" id="loginPassword" placeholder="Enter your password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Sign In</button>
+                </form>
+
+                <!-- Register Form (hidden by default) -->
+                <form id="registerForm" class="hidden">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input class="form-input" type="text" id="registerName" placeholder="John Doe" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input class="form-input" type="email" id="registerEmail" placeholder="you@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" type="password" id="registerPassword" placeholder="Create a password" required minlength="6" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input class="form-input" type="password" id="registerConfirm" placeholder="Confirm your password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

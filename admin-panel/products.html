@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products — NovaMart Admin</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar-root"></div>
+        <div class="main-content">
+            <div id="topbar-root"></div>
+            <div class="page-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>All Products</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openProductModal()">+ Add Product</button>
+                    </div>
+                    <div class="panel-body">
+                        <table class="data-table">
+                            <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Rating</th><th>Actions</th></tr></thead>
+                            <tbody id="productsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Product</h2>
+                <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+            </div>
+            <form id="productForm" enctype="multipart/form-data">
+                <input type="hidden" id="editId" />
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input class="form-input" type="text" id="pName" placeholder="e.g. Nova X Pro Smartphone" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Slug</label>
+                    <input class="form-input" type="text" id="pSlug" placeholder="nova-x-pro-smartphone" required />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Price ($)</label>
+                        <input class="form-input" type="number" step="0.01" id="pPrice" placeholder="899.99" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock</label>
+                        <input class="form-input" type="number" id="pStock" placeholder="50" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-input form-select" id="pCategory" required>
+                        <option value="">Select category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Books">Books</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="pDesc" placeholder="Product description..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Images</label>
+                    <input class="form-input" type="file" id="pImages" accept="image/*" multiple style="padding:8px" />
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-api.js"></script>
+    <script src="js/admin-ui.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="js/admin-socket.js"></script>
+    <script>
+        let allProducts = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminPage('products', 'Products');
+            loadProducts();
+
+            document.getElementById('pName').addEventListener('input', (e) => {
+                document.getElementById('pSlug').value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            });
+
+            document.getElementById('productForm').addEventListener('submit', saveProduct);
+        });
+
+        async function loadProducts() {
+            const tbody = document.getElementById('productsTable');
+            showLoading(tbody.parentElement.parentElement);
+
+            try {
+                const data = await AdminAPI.getProducts();
+                allProducts = data.products || data;
+
+                document.querySelector('.panel .panel-body').innerHTML = `<table class="data-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Rating</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table>`;
+
+                const table = document.getElementById('productsTable');
+                if (allProducts.length === 0) {
+                    table.innerHTML = '<tr><td colspan="6" class="empty-state">No products found. Add your first product!</td></tr>';
+                    return;
+                }
+
+                table.innerHTML = allProducts.map(p => {
+                    const img = p.images && p.images.length > 0
+                        ? `http://localhost:5000${p.images[0]}`
+                        : `https://placehold.co/80x80/1a1d27/8B5CF6?text=${p.name.charAt(0)}`;
+                    const stockClass = p.stock === 0 ? 'color:var(--error)' : p.stock < 5 ? 'color:var(--warning)' : 'color:var(--success)';
+                    return `<tr>
+                        <td><div class="table-product"><img src="${img}" alt="${p.name}"/><div class="info"><h4>${p.name}</h4><p>${p.slug}</p></div></div></td>
+                        <td><span style="color:var(--accent);font-size:.82rem;font-weight:600">${p.category}</span></td>
+                        <td style="font-weight:600">${formatMoney(p.price)}</td>
+                        <td style="${stockClass};font-weight:600">${p.stock}</td>
+                        <td>⭐ ${p.rating.toFixed(1)} <span style="color:var(--text-muted)">(${p.numReviews})</span></td>
+                        <td>
+                            <div style="display:flex;gap:6px">
+                                <button class="btn btn-secondary btn-sm" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        function openProductModal() {
+            document.getElementById('modalTitle').textContent = 'Add Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('editId').value = '';
+            openModal('productModal');
+        }
+
+        function editProduct(p) {
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('editId').value = p._id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pSlug').value = p.slug;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pStock').value = p.stock;
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pDesc').value = p.description;
+            openModal('productModal');
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            const id = document.getElementById('editId').value;
+            const formData = new FormData();
+            formData.append('name', document.getElementById('pName').value);
+            formData.append('slug', document.getElementById('pSlug').value);
+            formData.append('price', document.getElementById('pPrice').value);
+            formData.append('stock', document.getElementById('pStock').value);
+            formData.append('category', document.getElementById('pCategory').value);
+            formData.append('description', document.getElementById('pDesc').value);
+
+            const files = document.getElementById('pImages').files;
+            for (let i = 0; i < files.length; i++) formData.append('images', files[i]);
+
+            try {
+                if (id) {
+                    await AdminAPI.updateProduct(id, formData);
+                    showToast('Product updated!', 'success');
+                } else {
+                    await AdminAPI.createProduct(formData);
+                    showToast('Product created!', 'success');
+                }
+                closeModal('productModal');
+                loadProducts();
+            } catch (err) { showToast(err.message, 'error'); }
+            btn.disabled = false;
+            btn.textContent = 'Save Product';
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Delete this product?')) return;
+            try {
+                await AdminAPI.deleteProduct(id);
+                showToast('Product deleted', 'info');
+                loadProducts();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+    </script>
+</body>
+</html>

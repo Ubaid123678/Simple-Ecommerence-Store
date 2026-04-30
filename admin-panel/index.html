@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — NovaMart Admin</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar-root"></div>
+        <div class="main-content">
+            <div id="topbar-root"></div>
+            <div class="page-content" id="dashboardContent">
+                <!-- Stats -->
+                <div class="stats-grid" id="statsGrid"></div>
+                <!-- Charts -->
+                <div class="chart-grid">
+                    <div class="chart-card"><h3>Revenue Overview</h3><canvas id="revenueChart"></canvas></div>
+                    <div class="chart-card"><h3>Orders by Status</h3><canvas id="statusChart"></canvas></div>
+                </div>
+                <!-- Recent Orders -->
+                <div class="panel">
+                    <div class="panel-header"><h2>Recent Orders</h2><a href="orders.html" class="btn btn-secondary btn-sm">View All</a></div>
+                    <div class="panel-body"><table class="data-table"><thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-api.js"></script>
+    <script src="js/admin-ui.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="js/admin-socket.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminPage('dashboard', 'Dashboard');
+            loadDashboard();
+        });
+
+        async function loadDashboard() {
+            try {
+                const stats = await AdminAPI.getStats();
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card animate-in"><div class="stat-icon">💰</div><div class="stat-value">${formatMoney(stats.totalSales)}</div><div class="stat-label">Total Revenue</div></div>
+                    <div class="stat-card animate-in" style="animation-delay:.06s"><div class="stat-icon">📦</div><div class="stat-value">${stats.totalOrders}</div><div class="stat-label">Total Orders</div></div>
+                    <div class="stat-card animate-in" style="animation-delay:.12s"><div class="stat-icon">🛍️</div><div class="stat-value">${stats.totalProducts}</div><div class="stat-label">Products</div></div>
+                    <div class="stat-card animate-in" style="animation-delay:.18s"><div class="stat-icon">👥</div><div class="stat-value">${stats.totalUsers}</div><div class="stat-label">Customers</div></div>
+                `;
+
+                // Load recent orders
+                const orders = await AdminAPI.getOrders();
+                const recent = orders.slice(0, 5);
+                document.getElementById('recentOrders').innerHTML = recent.length ? recent.map(o => `
+                    <tr>
+                        <td style="font-weight:600;color:var(--primary)">#${o._id.slice(-6).toUpperCase()}</td>
+                        <td>${o.userId?.name || 'N/A'}</td>
+                        <td style="font-weight:600">${formatMoney(o.total)}</td>
+                        <td><span class="badge-status badge-${o.status.toLowerCase()}">${o.status}</span></td>
+                        <td style="color:var(--text-muted)">${formatDate(o.createdAt)}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" class="empty-state">No orders yet</td></tr>';
+
+                renderCharts(stats, orders);
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        function renderCharts(stats, orders) {
+            const chartColors = { bg: 'rgba(139,92,246,0.2)', border: '#8B5CF6', accent: '#06D6A0', cyan: '#22D3EE', warn: '#F59E0B', err: '#EF4444' };
+
+            // Revenue chart (mock monthly data)
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [0, 0, 0, 0, 0, stats.totalSales],
+                        borderColor: chartColors.border,
+                        backgroundColor: chartColors.bg,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: chartColors.border
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748B' } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748B', callback: v => '$'+v } } } }
+            });
+
+            // Order status chart
+            const statusCounts = { Pending: 0, Processing: 0, Shipped: 0, Delivered: 0, Cancelled: 0 };
+            orders.forEach(o => { if (statusCounts[o.status] !== undefined) statusCounts[o.status]++; });
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{ data: Object.values(statusCounts), backgroundColor: [chartColors.warn, chartColors.border, chartColors.cyan, chartColors.accent, chartColors.err], borderWidth: 0 }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', padding: 16, usePointStyle: true } } }, cutout: '65%' }
+            });
+        }
+    </script>
+</body>
+</html>

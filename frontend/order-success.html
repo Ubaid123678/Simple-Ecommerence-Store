@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed — NovaMart</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="empty-state animate-scale-in" style="padding:100px 20px;">
+                <div style="width:100px;height:100px;border-radius:50%;background:var(--success-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h1 style="font-size:2rem;margin-bottom:8px;">Order Confirmed!</h1>
+                <p style="color:var(--text-secondary);font-size:1.1rem;max-width:500px;margin:0 auto 12px;">
+                    Thank you for your purchase! Your order has been placed successfully.
+                </p>
+                <p id="orderId" style="color:var(--accent);font-weight:600;margin-bottom:32px;"></p>
+                <div style="display:flex;gap:16px;justify-content:center;">
+                    <a href="profile.html" class="btn btn-primary">View My Orders</a>
+                    <a href="index.html" class="btn btn-secondary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage();
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) {
+                document.getElementById('orderId').textContent = `Order ID: #${id.slice(-8).toUpperCase()}`;
+            }
+        });
+    </script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="js/socket.js"></script>
+</body>
+</html>
