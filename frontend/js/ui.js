@@ -124,6 +124,11 @@ function renderFooter() {
                     <a href="index.html?category=Furniture">Furniture</a>
                 </div>
                 <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-col">
                     <h4>Account</h4>
                     <a href="profile.html">My Profile</a>
                     <a href="profile.html#orders">Orders</a>
@@ -132,7 +137,7 @@ function renderFooter() {
                 </div>
                 <div class="footer-col">
                     <h4>Help</h4>
-                    <a href="#">Contact Us</a>
+                    <a href="contact.html">Contact Us</a>
                     <a href="#">FAQ</a>
                     <a href="#">Shipping</a>
                     <a href="#">Returns</a>
@@ -182,4 +187,83 @@ function initPage() {
     }
 
     initToasts();
+    initScrollAnimations();
+    initNavbarScroll();
 }
+
+// Scroll reveal animations
+function initScrollAnimations() {
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+}
+
+// Navbar scroll effect
+function initNavbarScroll() {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
+
+// Magnetic hover effect
+document.addEventListener('mousemove', (e) => {
+    const magneticElements = document.querySelectorAll('.btn, .nav-btn, .category-card, .feature-card');
+    
+    magneticElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        if (Math.abs(x) < rect.width && Math.abs(y) < rect.height) {
+            const rotateX = y / 10;
+            const rotateY = -x / 10;
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        } else {
+            el.style.transform = '';
+        }
+    });
+});
+
+// Ripple effect on click
+function createRipple(event, element) {
+    const rect = element.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.style.cssText = `
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        width: 20px;
+        height: 20px;
+        left: ${event.clientX - rect.left - 10}px;
+        top: ${event.clientY - rect.top - 10}px;
+        animation: rippleEffect 0.6s linear;
+        pointer-events: none;
+    `;
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
+
+// Add ripple to buttons
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn:not(:disabled)');
+    if (btn && !btn.classList.contains('nav-btn')) {
+        createRipple(e, btn);
+    }
+});

@@ -26,6 +26,13 @@
                     <div class="panel-header"><h2>Recent Orders</h2><a href="orders.html" class="btn btn-secondary btn-sm">View All</a></div>
                     <div class="panel-body"><table class="data-table"><thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div>
                 </div>
+                <!-- Contact Messages -->
+                <div class="panel">
+                    <div class="panel-header"><h2>Contact Messages</h2></div>
+                    <div class="panel-body" id="contactMessagesList">
+                        <div class="empty-state">Loading...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,7 +71,32 @@
                 `).join('') : '<tr><td colspan="5" class="empty-state">No orders yet</td></tr>';
 
                 renderCharts(stats, orders);
+                loadContactMessages();
             } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        async function loadContactMessages() {
+            const container = document.getElementById('contactMessagesList');
+            try {
+                const messages = await AdminAPI.getContactMessages();
+                if (messages.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No contact messages yet</div>';
+                    return;
+                }
+                container.innerHTML = messages.slice(0, 10).map(m => `
+                    <div style="padding:16px;border-bottom:1px solid var(--border);transition:background .2s;cursor:pointer" onmouseover="this.style.background='var(--bg-card-hover)'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <strong style="color:var(--primary)">${m.name}</strong>
+                            <span style="font-size:.75rem;color:var(--text-muted)">${new Date(m.date).toLocaleDateString()}</span>
+                        </div>
+                        <div style="font-size:.8rem;color:var(--text-secondary);margin-bottom:4px;">📧 ${m.email}</div>
+                        <div style="font-size:.8rem;color:var(--accent);margin-bottom:4px;">📋 ${m.subject}</div>
+                        <div style="font-size:.85rem;color:var(--text-muted)">${m.message}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = '<div class="empty-state" style="color:var(--error)">Error loading messages</div>';
+            }
         }
 
         function renderCharts(stats, orders) {

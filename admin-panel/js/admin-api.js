@@ -23,8 +23,8 @@ async function adminAPI(endpoint, options = {}) {
 const AdminAPI = {
     login: (email, password) => adminAPI('/admin/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
     getStats: () => adminAPI('/admin/stats'),
-    // Products
-    getProducts: () => adminAPI('/products'),
+    // Products - use /all endpoint to get all products
+    getProducts: () => adminAPI('/products/all'),
     createProduct: (formData) => adminAPI('/admin/products', { method: 'POST', body: formData }),
     updateProduct: (id, formData) => adminAPI(`/admin/products/${id}`, { method: 'PUT', body: formData }),
     deleteProduct: (id) => adminAPI(`/admin/products/${id}`, { method: 'DELETE' }),
@@ -33,6 +33,14 @@ const AdminAPI = {
     updateOrderStatus: (id, status) => adminAPI(`/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
     // Users
     getUsers: () => adminAPI('/admin/users'),
-    // Coupons (reusing public endpoint for list, admin for create/delete)
-    getCoupons: () => adminAPI('/coupons'),
+    // Coupons - admin endpoints
+    getCoupons: () => adminAPI('/admin/coupons'),
+    createCoupon: (data) => adminAPI('/admin/coupons', { method: 'POST', body: JSON.stringify(data) }),
+    updateCoupon: (id, data) => adminAPI(`/admin/coupons/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    deleteCoupon: (id) => adminAPI(`/admin/coupons/${id}`, { method: 'DELETE' }),
+    // Contact messages
+    getContactMessages: () => {
+        const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+        return Promise.resolve(messages);
+    }
 };

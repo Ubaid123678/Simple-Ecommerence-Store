@@ -4,6 +4,7 @@ const {
     loginAdmin, getStats, createProduct, updateProduct, deleteProduct,
     getAllOrders, updateOrderStatus, getAllUsers
 } = require('../controllers/adminController');
+const { getAllCoupons, createCoupon, updateCoupon, deleteCoupon } = require('../controllers/couponController');
 const { protectAdmin } = require('../middleware/adminMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
@@ -26,5 +27,13 @@ router.route('/orders/:id/status')
 // User routes
 router.route('/users')
     .get(protectAdmin, getAllUsers);
+
+// Coupon routes
+router.route('/coupons')
+    .get(protectAdmin, getAllCoupons)
+    .post(protectAdmin, createCoupon);
+router.route('/coupons/:id')
+    .put(protectAdmin, updateCoupon)
+    .delete(protectAdmin, deleteCoupon);
 
 module.exports = router;

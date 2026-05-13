@@ -1,24 +1,72 @@
 /* ================================================
-   NovaMart — Animations
+   NovaMart — Enhanced Animations
    ================================================ */
+
+/* === BASE ANIMATIONS === */
 
 /* Fade In Up */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {
     animation: fadeInUp 0.6s ease forwards;
 }
 
-/* Staggered children */
+/* Fade In Down */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-down {
+    animation: fadeInDown 0.5s ease forwards;
+}
+
+/* Fade In Left */
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-left {
+    animation: fadeInLeft 0.5s ease forwards;
+}
+
+/* Fade In Right */
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-right {
+    animation: fadeInRight 0.5s ease forwards;
+}
+
+/* Scale In */
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.4s ease forwards;
+}
+
+/* Scale In with bounce */
+@keyframes scaleInBounce {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-bounce {
+    animation: scaleInBounce 0.6s ease forwards;
+}
+
+/* === STAGGERED CHILDREN === */
 .stagger-children > * {
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
@@ -37,70 +85,109 @@
 .stagger-children > *:nth-child(11) { animation-delay: 0.55s; }
 .stagger-children > *:nth-child(12) { animation-delay: 0.60s; }
 
-/* Pulse glow */
+/* === PULSE & GLOW === */
 @keyframes pulseGlow {
     0%, 100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2); }
-    50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.5); }
 }
 
 .animate-pulse-glow {
     animation: pulseGlow 2s infinite;
 }
 
-/* Scale in */
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+@keyframes accentPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(6, 214, 160, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(6, 214, 160, 0.5); }
 }
 
-.animate-scale-in {
-    animation: scaleIn 0.4s ease forwards;
+.animate-accent-pulse {
+    animation: accentPulse 2s infinite;
 }
 
-/* Slide in from right */
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(60px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+/* Border pulse */
+@keyframes borderPulse {
+    0%, 100% { border-color: rgba(139, 92, 246, 0.3); }
+    50% { border-color: rgba(139, 92, 246, 0.8); }
 }
 
-.animate-slide-right {
-    animation: slideInRight 0.5s ease forwards;
+.animate-border-pulse {
+    animation: borderPulse 2s infinite;
 }
 
-/* Spin — for loading */
+/* === FLOAT EFFECTS === */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.animate-float-slow {
+    animation: floatSlow 4s ease-in-out infinite;
+}
+
+/* === SPIN & ROTATE === */
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-.spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
+.spinner, .animate-spin {
     animation: spin 0.8s linear infinite;
 }
 
-.spinner-lg {
-    width: 48px;
-    height: 48px;
-    border-width: 4px;
+@keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-/* Heart beat (wishlist) */
+.animate-spin-slow {
+    animation: spinSlow 3s linear infinite;
+}
+
+/* Rotate on hover */
+@keyframes rotate360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* === BOUNCE & JUMP === */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.animate-bounce {
+    animation: bounce 0.8s ease infinite;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.4s ease forwards;
+}
+
+@keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.animate-jump {
+    animation: jump 1s ease infinite;
+}
+
+/* === HEART BEAT === */
 @keyframes heartBeat {
     0% { transform: scale(1); }
     15% { transform: scale(1.3); }
@@ -113,30 +200,311 @@
     animation: heartBeat 0.6s ease;
 }
 
-/* Success checkmark */
-@keyframes checkmarkDraw {
+/* === SHAKE === */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+}
+
+.animate-shake {
+    animation: shake 0.5s ease;
+}
+
+/* === BLINK === */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.animate-blink {
+    animation: blink 1.5s ease infinite;
+}
+
+/* === PROGRESS === */
+@keyframes progressBar {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.animate-progress {
+    animation: progressBar 1s ease forwards;
+}
+
+/* === SLIDE IN === */
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-right {
+    animation: slideInRight 0.5s ease forwards;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-60px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-left {
+    animation: slideInLeft 0.5s ease forwards;
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+    animation: slideInUp 0.5s ease forwards;
+}
+
+/* === TYPING CURSOR === */
+@keyframes typingCursor {
+    0%, 100% { border-right-color: var(--primary); }
+    50% { border-right-color: transparent; }
+}
+
+/* === GRADIENT ANIMATIONS === */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 4s ease infinite;
+}
+
+/* === SCROLL REVEAL === */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.6s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.6s ease;
+}
+
+.reveal-left.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.6s ease;
+}
+
+.reveal-right.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: all 0.6s ease;
+}
+
+.reveal-scale.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* === BUTTON EFFECTS === */
+.btn-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-shimmer::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.15) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.btn-shimmer:hover::after {
+    transform: translateX(100%);
+}
+
+/* === HOVER LIFT === */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+}
+
+/* === HOVER SCALE === */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* === RIPPLE EFFECT === */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: rippleAnim 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes rippleAnim {
     to {
-        stroke-dashoffset: 0;
+        transform: scale(4);
+        opacity: 0;
     }
 }
 
-/* Float effect (hero elements) */
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+/* === PARALLAX === */
+.parallax {
+    transition: transform 0.1s ease-out;
 }
 
-.animate-float {
-    animation: float 3s ease-in-out infinite;
+/* === MAGNETIC EFFECT === */
+.magnetic {
+    transition: transform 0.3s ease;
 }
 
-/* Bounce effect for badges */
-@keyframes bounceIn {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+/* === TEXT REVEAL === */
+.text-reveal {
+    overflow: hidden;
 }
 
-.animate-bounce-in {
-    animation: bounceIn 0.4s ease forwards;
+.text-reveal span {
+    display: inline-block;
+    transform: translateY(100%);
+    animation: textRevealAnim 0.8s ease forwards;
 }
+
+@keyframes textRevealAnim {
+    to { transform: translateY(0); }
+}
+
+/* === SUCCESS CHECKMARK === */
+@keyframes checkmarkDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+.animate-checkmark path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: checkmarkDraw 0.6s ease forwards;
+}
+
+/* === CONFETTI EFFECT === */
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.animate-confetti > * {
+    animation: confetti 3s ease forwards;
+}
+
+/* === DOTS LOADING === */
+@keyframes dotsLoading {
+    0%, 20% { opacity: 0; }
+    40%, 100% { opacity: 1; }
+}
+
+.dots-loading span {
+    animation: dotsLoading 1.4s infinite;
+}
+
+.dots-loading span:nth-child(2) { animation-delay: 0.2s; }
+.dots-loading span:nth-child(3) { animation-delay: 0.4s; }
+
+/* === CARD FLIP === */
+@keyframes flipIn {
+    from { transform: rotateY(90deg); opacity: 0; }
+    to { transform: rotateY(0deg); opacity: 1; }
+}
+
+.animate-flip {
+    animation: flipIn 0.6s ease forwards;
+}
+
+/* === ZOOM HOVER === */
+.zoom-hover {
+    overflow: hidden;
+}
+
+.zoom-hover img,
+.zoom-hover .zoom-target {
+    transition: transform 0.5s ease;
+}
+
+.zoom-hover:hover img,
+.zoom-hover:hover .zoom-target {
+    transform: scale(1.1);
+}
+
+/* === GLASS MORPHISM === */
+.glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === NOTIFICATION BUBBLE === */
+@keyframes bubbleIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.animate-bubble {
+    animation: bubbleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* === DURATION UTILITIES === */
+.duration-fast { animation-duration: 0.2s !important; }
+.duration-normal { animation-duration: 0.4s !important; }
+.duration-slow { animation-duration: 0.8s !important; }
+
+/* === DELAY UTILITIES === */
+.delay-1 { animation-delay: 0.1s !important; }
+.delay-2 { animation-delay: 0.2s !important; }
+.delay-3 { animation-delay: 0.3s !important; }
+.delay-4 { animation-delay: 0.4s !important; }
+.delay-5 { animation-delay: 0.5s !important; }
+
+/* === FILL MODE === */
+.fill-forwards { animation-fill-mode: forwards; }
+.fill-both { animation-fill-mode: both; }
