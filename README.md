@@ -161,6 +161,9 @@ All categories are available in both store and admin:
 5. **Books** - Knowledge & fiction
 
 ---
+## Live Preview
+
+<video src="./preview.mp4" width="100%" controls autoplay loop muted></video>
 
 ## 🔌 API Endpoints
 
