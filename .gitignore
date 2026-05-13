@@ -8,3 +8,4 @@ backend/uploads/*
 .DS_Store
 npm-debug.log*
 yarn-error.log*
+frrontend/PROJECT_STRUCTURE.md
