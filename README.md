@@ -162,8 +162,7 @@ All categories are available in both store and admin:
 
 ---
 ## Live Preview
-
-[![NovaMart Live Preview](https://img.youtube.com/vi/Vz6iRaz_RyY/maxresdefault.jpg)](https://youtu.be/Vz6iRaz_RyY)
+<video src="./preview.mp4" width="100%" controls autoplay loop muted></video>
 
 ## 🔌 API Endpoints
 
