@@ -163,7 +163,7 @@ All categories are available in both store and admin:
 ---
 ## Live Preview
 
-<video src="https://github.com/Ubaid123678/Simple-Ecommerence-Store/raw/main/preview.mp4" width="100%" controls autoplay loop muted></video>
+[![NovaMart Live Preview](https://img.youtube.com/vi/Vz6iRaz_RyY/maxresdefault.jpg)](https://youtu.be/Vz6iRaz_RyY)
 
 ## 🔌 API Endpoints
 
