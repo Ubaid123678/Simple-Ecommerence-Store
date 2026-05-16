@@ -162,7 +162,7 @@ All categories are available in both store and admin:
 
 ---
 ## Live Preview
-<video src="https://raw.githubusercontent.com/Ubaid123678/Simple-Ecommerence-Store/main/preview.mp4" width="100%" controls autoplay loop muted></video>
+![Live Preview](assets/preview.gif)
 
 ## 🔌 API Endpoints
 
