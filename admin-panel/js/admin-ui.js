@@ -75,7 +75,14 @@ function renderSidebar(activePage) {
 function renderTopbar(title) {
     return `
     <header class="topbar">
-        <h1>${title}</h1>
+        <div class="topbar-left">
+            <button class="topbar-btn sidebar-toggle" id="sidebarToggle" title="Menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <h1>${title}</h1>
+        </div>
         <div class="topbar-actions">
             <button class="topbar-btn" id="notifBtn" title="Notifications">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -93,6 +100,34 @@ function initAdminPage(activePage, title) {
     if (sidebarEl) sidebarEl.outerHTML = renderSidebar(activePage);
     if (topbarEl) topbarEl.outerHTML = renderTopbar(title);
     initToasts();
+
+    const sidebar = document.getElementById('sidebar');
+    let overlay = document.getElementById('sidebarOverlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sidebarOverlay';
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeSidebar = () => {
+        if (!sidebar) return;
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+    };
+
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.classList.toggle('active', isOpen);
+        });
+    }
+
+    overlay.addEventListener('click', closeSidebar);
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) closeSidebar();
+    });
 }
 
 function adminLogout() {

@@ -14,14 +14,14 @@
     <div class="page-wrapper">
         <div class="container">
             <div class="empty-state animate-scale-in" style="padding:100px 20px;">
-                <div style="width:100px;height:100px;border-radius:50%;background:var(--success-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+                <div style="width:clamp(72px,24vw,100px);height:clamp(72px,24vw,100px);border-radius:50%;background:var(--success-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                         <polyline points="22 4 12 14.01 9 11.01"/>
                     </svg>
                 </div>
                 <h1 style="font-size:2rem;margin-bottom:8px;">Order Confirmed!</h1>
-                <p style="color:var(--text-secondary);font-size:1.1rem;max-width:500px;margin:0 auto 12px;">
+                <p style="color:var(--text-secondary);font-size:1.1rem;max-width:min(500px, 100%);margin:0 auto 12px;">
                     Thank you for your purchase! Your order has been placed successfully.
                 </p>
                 <p id="orderId" style="color:var(--accent);font-weight:600;margin-bottom:32px;"></p>

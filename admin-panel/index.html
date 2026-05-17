@@ -62,11 +62,11 @@
                 const recent = orders.slice(0, 5);
                 document.getElementById('recentOrders').innerHTML = recent.length ? recent.map(o => `
                     <tr>
-                        <td style="font-weight:600;color:var(--primary)">#${o._id.slice(-6).toUpperCase()}</td>
-                        <td>${o.userId?.name || 'N/A'}</td>
-                        <td style="font-weight:600">${formatMoney(o.total)}</td>
-                        <td><span class="badge-status badge-${o.status.toLowerCase()}">${o.status}</span></td>
-                        <td style="color:var(--text-muted)">${formatDate(o.createdAt)}</td>
+                        <td data-label="Order ID" style="font-weight:600;color:var(--primary)">#${o._id.slice(-6).toUpperCase()}</td>
+                        <td data-label="Customer">${o.userId?.name || 'N/A'}</td>
+                        <td data-label="Total" style="font-weight:600">${formatMoney(o.total)}</td>
+                        <td data-label="Status"><span class="badge-status badge-${o.status.toLowerCase()}">${o.status}</span></td>
+                        <td data-label="Date" style="color:var(--text-muted)">${formatDate(o.createdAt)}</td>
                     </tr>
                 `).join('') : '<tr><td colspan="5" class="empty-state">No orders yet</td></tr>';
 

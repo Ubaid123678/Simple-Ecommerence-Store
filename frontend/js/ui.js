@@ -57,6 +57,8 @@ function renderStars(rating, size = 16) {
 function renderNavbar() {
     const user = getUser();
     const cartCount = localStorage.getItem('novamart_cart_count') || 0;
+    const currentPath = (window.location.pathname.split('/').pop() || 'index.html');
+    const isActive = (name) => currentPath === name;
 
     return `
     <nav class="navbar">
@@ -104,7 +106,43 @@ function renderNavbar() {
                 </svg>
             </button>
         </div>
-    </nav>`;
+    </nav>
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#products">Products</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="cart.html">Cart</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="menu-actions">
+            ${user ? `
+                <a href="profile.html" class="btn btn-secondary btn-sm">My Account</a>
+            ` : `
+                <a href="auth.html" class="btn btn-primary btn-sm">Sign In</a>
+            `}
+            <a href="index.html#products" class="btn btn-accent btn-sm">Shop Now</a>
+        </div>
+    </div>
+    <div class="mobile-action-bar" aria-label="Quick actions">
+        <a href="index.html" class="${isActive('index.html') ? 'active' : ''}" title="Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7"/><path d="M9 22V12h6v10"/></svg>
+        </a>
+        <a href="index.html#products" title="Products">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </a>
+        <a href="cart.html" class="${isActive('cart.html') ? 'active' : ''}" title="Cart" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span class="badge" id="mobileCartBadge" style="${cartCount > 0 ? '' : 'display:none'}">${cartCount}</span>
+        </a>
+        <a href="wishlist.html" class="${isActive('wishlist.html') ? 'active' : ''}" title="Wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <a href="${user ? 'profile.html' : 'auth.html'}" class="${isActive(user ? 'profile.html' : 'auth.html') ? 'active' : ''}" title="Account">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+    </div>`;
 }
 
 function renderFooter() {
@@ -154,10 +192,16 @@ function renderFooter() {
 function updateCartBadge(count) {
     localStorage.setItem('novamart_cart_count', count);
     const badge = document.getElementById('cartBadge');
+    const mobileBadge = document.getElementById('mobileCartBadge');
     if (badge) {
         badge.textContent = count;
         badge.style.display = count > 0 ? 'flex' : 'none';
         if (count > 0) badge.classList.add('animate-bounce-in');
+    }
+    if (mobileBadge) {
+        mobileBadge.textContent = count;
+        mobileBadge.style.display = count > 0 ? 'flex' : 'none';
+        if (count > 0) mobileBadge.classList.add('animate-bounce-in');
     }
 }
 
@@ -189,7 +233,31 @@ function initPage() {
     initToasts();
     initScrollAnimations();
     initNavbarScroll();
+    initMobileMenu();
 }
+
+function initMobileMenu() {
+    const btn = document.getElementById('mobileMenuBtn');
+    const menu = document.getElementById('mobileMenu');
+    const backdrop = document.getElementById('mobileMenuBackdrop');
+    if (!btn || !menu || !backdrop) return;
+
+    const closeMenu = () => {
+        menu.classList.remove('open');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    const toggleMenu = () => {
+        const isOpen = menu.classList.toggle('open');
+        backdrop.classList.toggle('active', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
+
+    btn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+ }
 
 // Scroll reveal animations
 function initScrollAnimations() {

@@ -17,7 +17,7 @@
                     <div class="panel-header">
                         <h2>All Orders</h2>
                         <div class="actions">
-                            <select class="form-input form-select" id="statusFilter" style="width:160px;padding:7px 12px;font-size:.82rem" onchange="filterOrders()">
+                            <select class="form-input form-select" id="statusFilter" style="padding:7px 12px;font-size:.82rem" onchange="filterOrders()">
                                 <option value="">All Statuses</option>
                                 <option value="Pending">Pending</option>
                                 <option value="Processing">Processing</option>
@@ -83,16 +83,16 @@
             }
             tbody.innerHTML = orders.map(o => `
                 <tr>
-                    <td style="font-weight:600;color:var(--primary)">#${o._id.slice(-6).toUpperCase()}</td>
-                    <td>${o.userId?.name || 'N/A'}</td>
-                    <td>${o.items.length} item(s)</td>
-                    <td style="font-weight:600">${formatMoney(o.total)}</td>
-                    <td><span class="badge-status badge-${o.status.toLowerCase()}">${o.status}</span></td>
-                    <td style="color:var(--text-muted);font-size:.82rem">${formatDate(o.createdAt)}</td>
-                    <td>
+                    <td data-label="Order ID" style="font-weight:600;color:var(--primary)">#${o._id.slice(-6).toUpperCase()}</td>
+                    <td data-label="Customer">${o.userId?.name || 'N/A'}</td>
+                    <td data-label="Items">${o.items.length} item(s)</td>
+                    <td data-label="Total" style="font-weight:600">${formatMoney(o.total)}</td>
+                    <td data-label="Status"><span class="badge-status badge-${o.status.toLowerCase()}">${o.status}</span></td>
+                    <td data-label="Date" style="color:var(--text-muted);font-size:.82rem">${formatDate(o.createdAt)}</td>
+                    <td data-label="Actions">
                         <div style="display:flex;gap:6px">
                             <button class="btn btn-secondary btn-sm" onclick='viewOrder("${o._id}")'>View</button>
-                            <select class="form-input form-select" style="width:120px;padding:5px 8px;font-size:.78rem" onchange="updateStatus('${o._id}', this.value)" value="${o.status}">
+                            <select class="form-input form-select" style="padding:5px 8px;font-size:.78rem" onchange="updateStatus('${o._id}', this.value)" value="${o.status}">
                                 <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
                                 <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
                                 <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>

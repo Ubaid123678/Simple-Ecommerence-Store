@@ -52,14 +52,14 @@
 
                 tbody.innerHTML = users.map(u => `
                     <tr>
-                        <td>
+                        <td data-label="Customer">
                             <div style="display:flex;align-items:center;gap:10px">
                                 <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;color:#fff;flex-shrink:0">${u.name.charAt(0).toUpperCase()}</div>
                                 <span style="font-weight:600">${u.name}</span>
                             </div>
                         </td>
-                        <td style="color:var(--text-secondary)">${u.email}</td>
-                        <td style="color:var(--text-muted);font-size:.82rem">${formatDate(u.createdAt)}</td>
+                        <td data-label="Email" style="color:var(--text-secondary)">${u.email}</td>
+                        <td data-label="Joined" style="color:var(--text-muted);font-size:.82rem">${formatDate(u.createdAt)}</td>
                     </tr>
                 `).join('');
             } catch (err) { showToast(err.message, 'error'); }

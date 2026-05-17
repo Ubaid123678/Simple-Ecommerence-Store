@@ -123,12 +123,12 @@
                         : `https://placehold.co/80x80/1a1d27/8B5CF6?text=${p.name.charAt(0)}`;
                     const stockClass = p.stock === 0 ? 'color:var(--error)' : p.stock < 5 ? 'color:var(--warning)' : 'color:var(--success)';
                     return `<tr>
-                        <td><div class="table-product"><img src="${img}" alt="${p.name}"/><div class="info"><h4>${p.name}</h4><p>${p.slug}</p></div></div></td>
-                        <td><span style="color:var(--accent);font-size:.82rem;font-weight:600">${p.category}</span></td>
-                        <td style="font-weight:600">${formatMoney(p.price)}</td>
-                        <td style="${stockClass};font-weight:600">${p.stock}</td>
-                        <td>⭐ ${p.rating.toFixed(1)} <span style="color:var(--text-muted)">(${p.numReviews})</span></td>
-                        <td>
+                        <td data-label="Product"><div class="table-product"><img src="${img}" alt="${p.name}"/><div class="info"><h4>${p.name}</h4><p>${p.slug}</p></div></div></td>
+                        <td data-label="Category"><span style="color:var(--accent);font-size:.82rem;font-weight:600">${p.category}</span></td>
+                        <td data-label="Price" style="font-weight:600">${formatMoney(p.price)}</td>
+                        <td data-label="Stock" style="${stockClass};font-weight:600">${p.stock}</td>
+                        <td data-label="Rating">⭐ ${p.rating.toFixed(1)} <span style="color:var(--text-muted)">(${p.numReviews})</span></td>
+                        <td data-label="Actions">
                             <div style="display:flex;gap:6px">
                                 <button class="btn btn-secondary btn-sm" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">Delete</button>

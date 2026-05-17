@@ -81,11 +81,11 @@
                 tbody.innerHTML = coupons.map(c => {
                     const active = c.usesRemaining > 0;
                     return `<tr>
-                        <td style="font-weight:700;font-family:var(--font-heading);letter-spacing:1px;color:var(--accent)">${c.code}</td>
-                        <td style="font-weight:600">${c.discountPercent}%</td>
-                        <td>${c.usesRemaining}</td>
-                        <td><span class="badge-status ${active?'badge-delivered':'badge-cancelled'}">${active?'Active':'Expired'}</span></td>
-                        <td><button class="btn btn-danger btn-sm" onclick="deleteCoupon('${c._id}')">Delete</button></td>
+                        <td data-label="Code" style="font-weight:700;font-family:var(--font-heading);letter-spacing:1px;color:var(--accent)">${c.code}</td>
+                        <td data-label="Discount" style="font-weight:600">${c.discountPercent}%</td>
+                        <td data-label="Uses Left">${c.usesRemaining}</td>
+                        <td data-label="Status"><span class="badge-status ${active?'badge-delivered':'badge-cancelled'}">${active?'Active':'Expired'}</span></td>
+                        <td data-label="Actions"><button class="btn btn-danger btn-sm" onclick="deleteCoupon('${c._id}')">Delete</button></td>
                     </tr>`;
                 }).join('');
             } catch (err) { showToast(err.message, 'error'); }
